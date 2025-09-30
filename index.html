@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Photo Generator</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script defer src="script.js"></script>
+</head>
+
+<body>
+  <div class="page">
+    <header class="hero">
+      <h1 class="title">Photo Generator</h1>
+      <p class="tagline">Choose a source, set count and size, preview fast, download everything as a ZIP or export a collage.</p>
+    </header>
+
+    <main class="card">
+      <section class="controls">
+        <div class="row">
+          <label class="field">
+            <span class="label">Source</span>
+            <select id="source">
+              <option value="picsum" selected>Picsum random</option>
+              <option value="unsplash">Unsplash by keyword</option>
+            </select>
+          </label>
+
+          <label class="field opt-unsplash hidden">
+            <span class="label">Keyword</span>
+            <input id="keyword" type="text" placeholder="forest, city night, pastel" />
+          </label>
+
+          <label class="field opt-unsplash hidden">
+            <span class="label">Unsplash access key</span>
+            <input id="apiKey" type="text" placeholder="Paste your Unsplash access key" />
+          </label>
+        </div>
+
+        <div class="row">
+          <label class="field">
+            <span class="label">How many</span>
+            <input id="count" type="number" min="1" max="60" value="12" />
+          </label>
+
+          <label class="field">
+            <span class="label">Size per image</span>
+            <select id="size">
+              <option value="256">256</option>
+              <option value="512">512</option>
+              <option value="1000" selected>1000</option>
+              <option value="2000">2000</option>
+              <option value="5000">5000</option>
+            </select>
+          </label>
+
+          <button id="renderBtn" class="btn">Render set</button>
+        </div>
+
+        <div class="row tips">
+          <span>Preview uses thumbnails for speed. ZIP uses your selected size.</span>
+        </div>
+
+        <div class="row">
+          <button id="zipBtn" class="btn">Download ZIP</button>
+          <button id="collageBtn" class="btn ghost">Export collage PNG</button>
+          <label class="field small">
+            <span class="label">Collage cell</span>
+            <select id="cell">
+              <option value="256">256</option>
+              <option value="512" selected>512</option>
+              <option value="800">800</option>
+              <option value="1000">1000</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section id="grid" class="grid" aria-live="polite"></section>
+    </main>
+
+    <footer class="foot">
+      <p>
+        Picsum random requires no key.
+        Unsplash search needs an access key from <a href="https://unsplash.com/developers" target="_blank" rel="noreferrer noopener">Unsplash developers</a>.
+      </p>
+    </footer>
+  </div>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+</body>
+
+</html>

@@ -1,7 +1,9 @@
-// Photo Batch Studio Plus
+// Photo Batch Studio Plus with persistent Unsplash key
 const sourceEl = document.getElementById('source');
 const keywordEl = document.getElementById('keyword');
 const apiKeyEl = document.getElementById('apiKey');
+const rememberKeyEl = document.getElementById('rememberKey');
+const forgetKeyBtn = document.getElementById('forgetKey');
 const countEl = document.getElementById('count');
 const sizeEl = document.getElementById('size');
 const cellEl = document.getElementById('cell');
@@ -13,6 +15,8 @@ const toast = document.getElementById('toast');
 
 let currentItems = []; // { previewUrl, downloadUrl, caption }
 let currentSize = 1000;
+
+const STORE_KEY = 'pbs_plus_unsplash_key';
 
 function showToast(t){
   toast.textContent = t;
@@ -72,6 +76,15 @@ function addTile(src, caption=''){
   grid.appendChild(fig);
 }
 
+function rememberKeyMaybe(){
+  const key = apiKeyEl.value.trim();
+  if(rememberKeyEl.checked && key){
+    localStorage.setItem(STORE_KEY, key);
+  }else{
+    localStorage.removeItem(STORE_KEY);
+  }
+}
+
 async function renderSet(){
   const n = Math.min(Math.max(+countEl.value || 1, 1), 60);
   currentSize = +sizeEl.value || 1000;
@@ -92,10 +105,11 @@ async function renderSet(){
       showToast('Enter keyword and key for Unsplash');
       return;
     }
+    // persist choice if requested
+    rememberKeyMaybe();
     try{
       const res = await fetchUnsplash(q, n, key);
       currentItems = res.map(r => {
-        // use raw with width and height for exact square crops
         const raw = r.urls.raw;
         const preview = `${raw}&w=400&h=400&fit=crop`;
         const full = `${raw}&w=${currentSize}&h=${currentSize}&fit=crop`;
@@ -145,7 +159,6 @@ async function exportCollage(){
   if(!currentItems.length){ showToast('Render first'); return; }
   const cell = +cellEl.value || 512;
 
-  // load previews
   const imgs = await Promise.all(currentItems.map(it => new Promise(resolve => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
@@ -202,10 +215,27 @@ async function exportCollage(){
   }
 }
 
+// load saved key on boot
+document.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem(STORE_KEY);
+  if(saved){
+    apiKeyEl.value = saved;
+    rememberKeyEl.checked = true;
+  }
+  toggleUnsplashFields();
+});
+
+// live saving or removal based on toggle
+apiKeyEl.addEventListener('input', () => { if(rememberKeyEl.checked) rememberKeyMaybe(); });
+rememberKeyEl.addEventListener('change', rememberKeyMaybe);
+forgetKeyBtn.addEventListener('click', () => {
+  localStorage.removeItem(STORE_KEY);
+  apiKeyEl.value = '';
+  rememberKeyEl.checked = false;
+  showToast('Key removed');
+});
+
+// actions
 renderBtn.addEventListener('click', renderSet);
 zipBtn.addEventListener('click', downloadZip);
 collageBtn.addEventListener('click', exportCollage);
-
-document.addEventListener('DOMContentLoaded', () => {
-  toggleUnsplashFields();
-});

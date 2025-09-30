@@ -35,7 +35,11 @@
 
           <label class="field opt-unsplash hidden">
             <span class="label">Unsplash access key</span>
-            <input id="apiKey" type="text" placeholder="Paste your Unsplash access key" />
+            <div class="row inline">
+              <input id="apiKey" type="password" placeholder="Paste your Unsplash access key" />
+              <label class="remember"><input id="rememberKey" type="checkbox" checked /> Remember</label>
+              <button id="forgetKey" class="btn ghost small">Forget key</button>
+            </div>
           </label>
         </div>
 

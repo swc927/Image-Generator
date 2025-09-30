@@ -1,4 +1,4 @@
-# Photo Batch Studio Plus
+# Photo Generator
 
 A single page tool that generates image batches in two ways.
 
@@ -19,3 +19,10 @@ Features
 
 Notes
 - For Unsplash please follow their guidelines for usage and credit
+
+# Photo Batch Studio Plus
+
+Now with a persistent Unsplash access key stored in localStorage if you tick Remember. You can remove it any time with the Forget key button.
+
+## Privacy note
+The key is saved only in your browser under this site origin. It is never uploaded by this app anywhere except when calling the Unsplash API from your browser.
